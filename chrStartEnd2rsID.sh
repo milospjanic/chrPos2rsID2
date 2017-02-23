@@ -25,7 +25,7 @@ fi
 tabsep $SNPS
 
 sed 's/^/rsID\t/g' <(head -n1 $SNPS) > $1.head
-cat $1.head <(tail -n+2 $1) > $1.mod
+cat $1.head <(tail -n+2 $SNPS) > $1.mod
 tabsep $1.mod
 tail -n+2 $1.mod > $1.mod2
 head -n1 $1.mod > $1.head
