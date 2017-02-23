@@ -25,6 +25,8 @@ chr1	714018	714019	SA1_NA19099_accB	A	G	44	0	27	0	0.0568146779328	0.567664969947
 
 Next an akw code will perform comparison of your file and dbSNP MySQL data using 3 different hash tables in awk. Script will output a file of your input SNPs with rsID appended to it, separated by tab and save it as $1.rsID, $1 being first parameter provided to the script that should be the file name containing SNPs.
 
+Script preserves the header of the original file and adds 'rsID' as a first field and prepends it to the output file.
+
 Output file will be placed in ~/chrStartEnd2rsID
 
 MySQL download will produce a file snp147Common.bed, with 14,815,821 SNPs:
@@ -75,7 +77,7 @@ chr1	714018	714019	SA1_NA19099_accB	A	G	44	0	27	0	0.0568146779328	0.567664969947
 ./chrStartEnd2rsID.sh SNP.file
 
 head SNP.file.rsID
-MarkerName  chr start   end TF_indiv_accB   ref alt cA  cC  cG  cT  p.binomial  p.betabinomial
+rsID  chr start   end TF_indiv_accB   ref alt cA  cC  cG  cT  p.binomial  p.betabinomial
 rs74512038	chr1	713976	713977	POL2_NA18951_accB	C	T	0	32	0	27	0.602923201257	0.753317610684756
 rs74512038	chr1	713976	713977	SA1_NA18951_accB	C	T	0	54	0	60	0.639575140949	0.93769632200937
 rs114983708	chr1	714018	714019	POL2_NA18505_accB	A	G	2	0	19	0	0.000221252441406	0.00311474712114779
