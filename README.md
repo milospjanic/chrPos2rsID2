@@ -4,7 +4,7 @@ chrStartEnd2rsID is a script to convert a list of genomics positions in a format
 
 **Usage**
 
-This script will check if the working folder ~/chrStartEnd2rsID is present and if not it will create ~/chrPos2rsID2. Next, script will go into ~/chrStartEnd2rsID and check if dbSNP bed file for human genome hg19 is present or not, version 147 (the latest one present in the mySQL database currently), and in case it is not present it will download it using mySQL from snp147Common table of hg19 dataset on genome-mysql.cse.ucsc.edu.
+This script will check if the working folder ~/chrStartEnd2rsID is present and if not it will create ~/chrStartEnd2rsID. Next, script will go into ~/chrStartEnd2rsID and check if dbSNP bed file for human genome hg19 is present or not, version 147 (the latest one present in the mySQL database currently), and in case it is not present it will download it using mySQL from snp147Common table of hg19 dataset on genome-mysql.cse.ucsc.edu.
 
 **Note - Script chrStartEnd2rsID.sh can be placed anywhere as well as the input file, however output will be in ~/chrStartEnd2rsID**
 
@@ -25,7 +25,7 @@ chr1	714018	714019	SA1_NA19099_accB	A	G	44	0	27	0	0.0568146779328	0.567664969947
 
 Next an akw code will perform comparison of your file and dbSNP MySQL data using 3 different hash tables in awk. Script will output a file of your input SNPs with rsID appended to it, separated by tab and save it as $1.rsID, $1 being first parameter provided to the script that should be the file name containing SNPs.
 
-Output file will be placed in ~/chrPos2rsID2
+Output file will be placed in ~/chrStartEnd2rsID
 
 MySQL download will produce a file snp147Common.bed, with 14,815,821 SNPs:
 <pre>
@@ -49,8 +49,8 @@ mpjanic@zoran:~/rsID2Bed$ wc -l snp147Common.bed
 
 To run the script type:
 <pre>
-chmod 775 chrPos2rsID2.sh 
-./chrPos2rsID2.sh path/to/file
+chmod 775 chrStartEnd2rsID.sh 
+./chrStartEnd2rsID.sh path/to/file
 </pre>
 
 **Prerequisites**
@@ -72,7 +72,7 @@ chr1	714018	714019	POL2_NA19099_accB	A	G	2	0	19	0	0.000221252441406	0.0025591824
 chr1	714018	714019	SA1_NA18505_accB	A	G	54	0	16	0	5.85395552939e-06	0.242465581502621
 chr1	714018	714019	SA1_NA19099_accB	A	G	44	0	27	0	0.0568146779328	0.567664969947665
 
-./chrPos2rsID2.sh SNP.file
+./chrStartEnd2rsID.sh SNP.file
 
 head SNP.file.rsID
 rs74512038	chr1	713976	713977	POL2_NA18951_accB	C	T	0	32	0	27	0.602923201257	0.753317610684756
