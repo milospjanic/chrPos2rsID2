@@ -23,8 +23,8 @@ mysql --user=genome --host=genome-mysql.cse.ucsc.edu -A -N -D hg19 -e 'SELECT ch
 fi
 
 tabsep $SNPS
-sed 's/^/chr/g' $SNPS | sed -e 's/_[ATCG]*/\t/' | sed -e 's/_[ATCG]*//' | sed 's/_.//' > $1.mod
-sed 's/^MarkerName/chr\tposition\t/g' <(head -n1 $SNPS) > $1.head
+
+sed 's/^/rsID\t/g' <(head -n1 $SNPS) > $1.head
 cat $1.head <(tail -n+2 $1.mod) > $1.mod2
 mv $1.mod2 $1.mod
 tabsep $1.mod
