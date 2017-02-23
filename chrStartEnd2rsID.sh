@@ -1,7 +1,7 @@
 #!/bin/bash
 
-FILE=~/chrPos2rsID/snp147Common.bed
-DIR=~/chrPos2rsID
+FILE=~/chrStartEnd2rsID/snp147Common.bed
+DIR=~/chrStartEnd2rsID
 SNPS=$(pwd)/$1
 echo Proccesing file:
 echo $SNPS 
@@ -10,10 +10,10 @@ echo $SNPS
 
 if [ ! -d $DIR ]
 then
-mkdir ~/chrPos2rsID
+mkdir ~/chrStartEnd2rsID
 fi
 
-cd ~/chrPos2rsID
+cd ~/chrStartEnd2rsID
 
 #check if dbsnp file exists, if not, download from snp147Common table using mysql
 
@@ -33,7 +33,7 @@ head -n1 $1.mod > $1.head
 
 
 #find positions of snps from the input list by comparing to snpdb
-awk 'NR==FNR {h1[$1] = 1; h2[$3]=1; h3[$1$3]=$4; next} {if(h2[$2]==1 && h1[$1]==1) print h3[$1$2]"\t"$0}' snp147Common.bed $1.mod2 > $1.rsID.nohead
+awk 'NR==FNR {h1[$1] = 1; h2[$3]=1; h3[$1$2]=$4; next} {if(h2[$2]==1 && h1[$1]==1) print h3[$1$2]"\t"$0}' snp147Common.bed $1.mod2 > $1.rsID.nohead
 sed '1s/^/rsID/' $1.head
 cat $1.head $1.rsID.nohead > $1.rsID
 
