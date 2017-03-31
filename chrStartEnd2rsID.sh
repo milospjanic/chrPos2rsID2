@@ -22,6 +22,24 @@ then
 mysql --user=genome --host=genome-mysql.cse.ucsc.edu -A -N -D hg19 -e 'SELECT chrom, chromStart, chromEnd, name FROM snp147Common' > snp147Common.bed
 fi
 
+#parse dbSNPs into insertions, SNPs and simple deletions, large deletions
+
+if [ ! -f snp147Common.bed.insertions ]
+then
+awk '$2 == $3 {print $0}' snp147Common.bed > snp147Common.bed.insertions
+fi
+
+if [ ! -f snp147Common.bed.snp.plus.simple.deletions ]
+then
+awk '$3 == $2+1 {print $0}' snp147Common.bed > snp147Common.bed.snp.plus.simple.deletions
+fi
+
+if [ ! -f snp147Common.bed.large.deletions ]
+then
+awk '{if ($3 != $2+1 && $2 != $3) print $0}' snp147Common.bed > snp147Common.bed.large.deletions
+fi
+
+
 tabsep $SNPS
 
 sed 's/^/rsID\t/g' <(head -n1 $SNPS) > $1.head
@@ -31,12 +49,26 @@ tail -n+2 $1.mod > $1.mod2
 head -n1 $1.mod > $1.head
 
 
-#find positions of snps from the input list by comparing to snpdb
-awk 'NR==FNR {h1[$1] = 1; h2[$3]=1; h3[$1$2]=$4; next} {if(h2[$2]==1 && h1[$1]==1) print h3[$1$2]"\t"$0}' snp147Common.bed $1.mod2 > $1.rsID.nohead
+#parse input file into insertions, SNPs and simple deletions, large deletions
 
-cat $1.head $1.rsID.nohead > $1.rsID
+awk '$2 == $3 {print $0}' $1.mod2 > $1.mod2.insertions
+awk '$3 == $2+1 {print $0}' $1.mod2 > $1.mod2.snp.plus.simple.deletions 
+awk '{if ($3 != $2+1 && $2 != $3) print $0}' $1.mod2 > $1.mod2.large.deletions
+
+#find positions of snps from the input list by comparing to snpdb
+
+awk 'NR==FNR {h1[$1] = $1; h2[$2]=$2; h3[$1$2]=$4; h4[$1$2]=1; next} {if(h2[$2]==$2 && h1[$1]==$1 && h4[$1$2]==1) print h3[$1$2]"\t"$0}' snp147Common.bed.insertions $1.mod2.insertions > $1.rsID.nohead.insertions
+awk 'NR==FNR {h1[$1] = $1; h2[$2]=$2; h3[$1$2]=$4; h4[$1$2]=1; next} {if(h2[$2]==$2 && h1[$1]==$1 && h4[$1$2]==1) print h3[$1$2]"\t"$0}' snp147Common.bed.snp.plus.simple.deletions $1.mod2.snp.plus.simple.deletions > $1.rsID.nohead.snp.plus.simple.deletions
+awk 'NR==FNR {h1[$1] = $1; h2[$2]=$2; h3[$1$2]=$4; h4[$1$2]=1; next} {if(h2[$2]==$2 && h1[$1]==$1 && h4[$1$2]==1) print h3[$1$2]"\t"$0}' snp147Common.bed.large.deletions $1.mod2.large.deletions > $1.rsID.nohead.large.deletions
+
+#merge insertions, SNPs and simple deletions, large deletions
+
+cat $1.rsID.nohead.insertions $1.rsID.nohead.snp.plus.simple.deletions $1.rsID.nohead.large.deletions > $1.rsID
+
+sed -i '1s/^/rsID\t/' $1.head
+cat $1.head $1.rsID > $1.rsID.final
+
 
 rm $1.mod
 rm $1.mod2
 rm $1.head
-rm $1.rsID.nohead
